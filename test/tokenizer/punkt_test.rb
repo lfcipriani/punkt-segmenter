@@ -4,7 +4,7 @@ require "tokenizer/punkt"
 class PunktTest < Test::Unit::TestCase
 
   def setup
-    punkt = Punkt.new
+    #punkt = Punkt.new
   end
 
   def test_simple
