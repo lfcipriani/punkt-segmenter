@@ -106,7 +106,7 @@ class FrequencyDistributionTest < Test::Unit::TestCase
     assert_equal @freq_dist.delete("one"), 4
     assert_equal @freq_dist.N            , 5
 
-    assert_raise { @freq_dist.delete_if { |sample, value| value == 2 } }
+    assert_raise(RuntimeError) { @freq_dist.delete_if { |sample, value| value == 2 } }
   end
 
   def test_features_with_empty_distribution
