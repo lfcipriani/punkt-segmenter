@@ -24,21 +24,21 @@
 module Punkt
   
   # Orthographoc Context Constants
-  _ORTHO_BEG_UC = 1 << 1 # Orthographoc context: beginning of sentence with upper case
-  _ORTHO_MID_UC = 1 << 2 # Orthographoc context: middle of sentence with upper case
-  _ORTHO_UNK_UC = 1 << 3 # Orthographoc context: unknown position in a sentence with upper case
-  _ORTHO_BEG_LC = 1 << 4 # Orthographoc context: beginning of sentence with lower case
-  _ORTHO_MID_LC = 1 << 5 # Orthographoc context: middle of sentence with lower case
-  _ORTHO_UNK_LC = 1 << 6 # Orthographoc context: unknown position in a sentence with lower case
-  _ORTHO_UC     = _ORTHO_BEG_UC + _ORTHO_MID_UC + _ORTHO_UNK_UC 
-  _ORTHO_LC     = _ORTHO_BEG_LC + _ORTHO_MID_LC + _ORTHO_UNK_LC 
-  _ORTHO_MAP    = {
-    [:initial,  :upper] => _ORTHO_BEG_UC,
-    [:internal, :upper] => _ORTHO_MID_UC,
-    [:unknown,  :upper] => _ORTHO_UNK_UC,
-    [:initial,  :lower] => _ORTHO_BEG_LC,
-    [:internal, :lower] => _ORTHO_MID_LC,
-    [:unknown,  :lower] => _ORTHO_UNK_LC,
+  ORTHO_BEG_UC = 1 << 1 # Orthographoc context: beginning of sentence with upper case
+  ORTHO_MID_UC = 1 << 2 # Orthographoc context: middle of sentence with upper case
+  ORTHO_UNK_UC = 1 << 3 # Orthographoc context: unknown position in a sentence with upper case
+  ORTHO_BEG_LC = 1 << 4 # Orthographoc context: beginning of sentence with lower case
+  ORTHO_MID_LC = 1 << 5 # Orthographoc context: middle of sentence with lower case
+  ORTHO_UNK_LC = 1 << 6 # Orthographoc context: unknown position in a sentence with lower case
+  ORTHO_UC     = ORTHO_BEG_UC + ORTHO_MID_UC + ORTHO_UNK_UC 
+  ORTHO_LC     = ORTHO_BEG_LC + ORTHO_MID_LC + ORTHO_UNK_LC 
+  ORTHO_MAP    = {
+    [:initial,  :upper] => ORTHO_BEG_UC,
+    [:internal, :upper] => ORTHO_MID_UC,
+    [:unknown,  :upper] => ORTHO_UNK_UC,
+    [:initial,  :lower] => ORTHO_BEG_LC,
+    [:internal, :lower] => ORTHO_MID_LC,
+    [:unknown,  :lower] => ORTHO_UNK_LC,
   }
 
 end
