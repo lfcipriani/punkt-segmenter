@@ -21,7 +21,7 @@ module Punkt
 
       @re_multi_char_punct = /(?:\-{2,}|\.{2,}|(?:\.\s){2,}\.)/
 
-      @re_word_tokenizer = /(#{@re_multi_char_punct}|(?=#{@re_word_start})\S+?(?= \s|$|#{@re_non_word_chars}|#{@re_multi_char_punct}|,(?=$|\s|#{@re_non_word_chars}|#{@re_multi_char_punct}))|\S)/
+      @re_word_tokenizer = /(#{@re_multi_char_punct}|(?=#{@re_word_start})\S+?(?=\s|$|#{@re_non_word_chars}|#{@re_multi_char_punct}|,(?=$|\s|#{@re_non_word_chars}|#{@re_multi_char_punct}))|\S)/
 
       @re_period_context = /\S*#{@re_sent_end_chars}(?=(?<after_tok>#{@re_non_word_chars}|\s+(?<next_tok>\S+)))/
     end
