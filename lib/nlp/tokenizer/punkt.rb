@@ -40,12 +40,13 @@ module Punkt
     [:internal, :lower] => ORTHO_MID_LC,
     [:unknown,  :lower] => ORTHO_UNK_LC,
   }
-
+  
 end
 
-require "tokenizer/punkt/language_vars"
-require "tokenizer/punkt/parameters"
-require "tokenizer/punkt/token"
-require "tokenizer/punkt/base"
-require "tokenizer/punkt/trainer"
-require "tokenizer/punkt/sentence_tokenizer"
+require "set"
+require "nlp/tokenizer/punkt/language_vars"
+require "nlp/tokenizer/punkt/parameters"
+require "nlp/tokenizer/punkt/token"
+require "nlp/tokenizer/punkt/base"
+require "nlp/tokenizer/punkt/trainer"
+require "nlp/tokenizer/punkt/sentence_tokenizer"

@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
-require "probability/frequency_distribution"
+require "nlp/probability/frequency_distribution"
 
 class FrequencyDistributionTest < Test::Unit::TestCase
 

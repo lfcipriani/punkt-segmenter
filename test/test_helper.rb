@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'lib/ruby-NLP-resources'
+require 'lib/nlp'
 
 require 'rubygems'
 require 'ruby-debug'

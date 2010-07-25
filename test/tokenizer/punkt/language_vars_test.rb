@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../test_helper')
-require "tokenizer/punkt/language_vars"
+require "nlp/tokenizer/punkt/language_vars"
 
 class PunktLanguageVarsTest < Test::Unit::TestCase
 

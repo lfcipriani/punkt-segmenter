@@ -2,6 +2,6 @@
 # File: script/console
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
-libs = " -r #{File.dirname(__FILE__) + '/../lib/ruby-NLP-resources.rb'}"
+libs = " -r #{File.dirname(__FILE__) + '/../lib/nlp.rb'}"
 puts "Loading ruby-NLP-resources env"
 exec "#{irb} #{libs} --simple-prompt #{ARGV.join("")}"
