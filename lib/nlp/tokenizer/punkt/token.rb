@@ -42,6 +42,10 @@ module Punkt
       return :none
     end
     
+    def ends_with_period?
+      @period_final
+    end
+    
     def is_ellipsis?
       !(@token =~ /\.\.+$/).nil?
     end
@@ -69,6 +73,9 @@ module Punkt
       result += '<S>' if @sentence_break
       result
     end
-    
+
+    def inspect
+      "<#{to_s}>"
+    end
   end
 end
