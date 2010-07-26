@@ -26,7 +26,7 @@ module Punkt
     end
     
     def clear_orthographic_context
-      @orthographic_context = {}
+      @orthographic_context = Hash.new(0)
     end
     
     def add_orthographic_context(type, flag)
