@@ -21,7 +21,7 @@ module Punkt
     end
     
     def type_without_period
-      @type.size > 1 and @type.end_with?('.') ? @type.chop : @type
+      @type.size > 1 && @type.end_with?('.') ? @type.chop : @type
     end
     
     def type_without_sentence_period
