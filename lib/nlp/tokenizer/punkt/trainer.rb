@@ -82,7 +82,16 @@ module Punkt
 
       get_orthography_data(tokens)
       
-      #TODO: finish algorithm
+      tokens.each { |token| @sentence_break_count += 1 if token.sentence_break }
+
+      pair_each(tokens) do |tok1, tok2|         
+        next if !tok1.ends_with_period? || !tok2
+        
+        @parameters.abbreviation_types << tok1.type_without_period if is_rare_abbreviation_type?(tok1, tok2)
+        
+        #TODO finish algorithm
+        
+      end
     end
     
     def reclassify_abbreviation_types(types, &block)
@@ -154,6 +163,23 @@ module Punkt
           context = :internal
         end
       end
+    end
+    
+    def is_rare_abbreviation_type?(current_token, next_token)
+      return false if current_token.abbr || !current_token.sentence_break
+      
+      type = current_token.type_without_sentence_period
+      
+      count = @type_fdist[type] + @type_fdist[type.chop]
+      return false if (@parameters.abbreviation_types.include?(type) || count >= ABBREV_BACKOFF)
+
+      if @language_vars.internal_punctuation.include?(next_token.token[0])
+        return true
+      elsif
+        type2 = next_token.type_without_sentence_period
+        type2_orthographic_context = @parameters.orthographic_context[type2]
+        return true if (type2_orthographic_context & Punkt::ORTHO_BEG_UC) && (type2_orthographic_context & Punkt::ORTHO_MID_UC)
+      end      
     end
     
   end
