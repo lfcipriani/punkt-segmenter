@@ -50,6 +50,15 @@ module Punkt
 
       end
     end
+    
+    def pair_each(list, &block)
+      previous = list[0]
+      list[1..list.size-1].each do |item|
+        yield(previous, item)
+        previous = item
+      end
+      yield(previous, nil)
+    end
         
   end
 end
