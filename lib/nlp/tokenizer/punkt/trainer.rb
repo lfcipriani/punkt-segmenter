@@ -87,10 +87,17 @@ module Punkt
       pair_each(tokens) do |tok1, tok2|         
         next if !tok1.ends_with_period? || !tok2
         
-        @parameters.abbreviation_types << tok1.type_without_period if is_rare_abbreviation_type?(tok1, tok2)
+        if is_rare_abbreviation_type?(tok1, tok2)
+          @parameters.abbreviation_types << tok1.type_without_period 
+        end
         
-        #TODO finish algorithm
+        if is_potential_sentence_starter?(tok2, tok1)
+          @sentence_starter_fdist << tok2.type
+        end
         
+        if is_potential_collocation?(tok1, tok2)
+          @collocation_fdist << [tok1.type_without_period, tok2.type_without_sentence_period]
+        end
       end
     end
     
@@ -182,5 +189,23 @@ module Punkt
       end      
     end
     
+    def is_potential_sentence_starter?(current_token, previous_token)
+      return (previous_token.sentence_break && 
+              !(previous_token.is_number? || previous_token.is_initial?) && 
+              current_token.is_alpha?)
+    end
+    
+    def is_potential_collocation?(tok1, tok2)
+      return (
+                (INCLUDE_ALL_COLLOCS || 
+                  (INCLUDE_ABBREV_COLLOCS && tok1.abbr) || 
+                  (tok1.sentence_break && 
+                    (tok1.is_number? || tok2.is_initial?)
+                  )
+                ) 
+                && tok1.is_non_punctuation? 
+                && tok2.is_non_punctuation?
+             )
+    end
   end
 end
