@@ -56,8 +56,34 @@ module Punkt
     end
     
     def train(text_or_tokens, finalize=true)
-      text_or_tokens = tokenize_words(text_or_tokens) if text_or_tokens.kind_of?(String)
-      train_tokens(text_or_tokens)
+      if text_or_tokens.kind_of?(String)
+        tokens = tokenize_words(text_or_tokens) 
+      elsif text_or_tokens.kind_of?(Array)
+        tokens = text_or_tokens.map { |t| @token_class.new(t) }
+      end
+      train_tokens(tokens)
+      finalize_training if finalize
+    end
+    
+    def get_parameters
+      finalize_training unless @finalized
+      return @parameters
+    end
+    
+    def finalize_training
+      @parameters.clear_sentence_starters 
+      find_sentence_starters do |type, ll|
+        @parameters.sentence_starters << type
+        puts "SENTENCE STARTERS: #{type} = #{ll}"
+      end
+      
+      @parameters.clear_collocations
+      find_collocations do |types, ll|
+        @parameters.collocations << [types[0], types[1]]
+        puts "COLLOCATIONS: #{types[0]}, #{types[1]} = #{ll}"
+      end
+
+      @finalized = true
     end
     
   private 
@@ -196,16 +222,88 @@ module Punkt
     end
     
     def is_potential_collocation?(tok1, tok2)
-      return (
-                (INCLUDE_ALL_COLLOCS || 
+      return ((INCLUDE_ALL_COLLOCS || 
                   (INCLUDE_ABBREV_COLLOCS && tok1.abbr) || 
                   (tok1.sentence_break && 
-                    (tok1.is_number? || tok2.is_initial?)
-                  )
-                ) 
-                && tok1.is_non_punctuation? 
-                && tok2.is_non_punctuation?
-             )
+                    (tok1.is_number? || tok2.is_initial?))) &&
+                tok1.is_non_punctuation? &&
+                tok2.is_non_punctuation?)
     end
+    
+    def find_sentence_starters(&block)
+      @sentence_starter_fdist.each do |type, type_at_break_count|
+        next if !type
+        
+        type_count = @type_fdist[type] + @type_fdist[type + "."]
+        
+        next if type_count < type_at_break_count
+        
+        ll = col_log_likelihood(@sentence_break_count, 
+                                type_count, 
+                                type_at_break_count, 
+                                @type_fdist.N)
+              
+        if (ll >= SENT_STARTER && 
+           @type_fdist.N.to_f/@sentence_break_count > type_count.to_f/type_at_break_count)
+          yield(type, ll)
+        end
+      end
+    end
+    
+    def col_log_likelihood(count_a, count_b, count_ab, n)
+      p = 1.0 * count_b / n
+      p1 = 1.0 * count_ab / count_a
+      p2 = 1.0 * (count_b - count_ab) / (n - count_a)
+
+      summand1 = (count_ab * Math.log(p) +
+                  (count_a - count_ab) * Math.log(1.0 - p))
+
+      summand2 = ((count_b - count_ab) * Math.log(p) +
+                  (n - count_a - count_b + count_ab) * Math.log(1.0 - p))
+
+      if count_a == count_ab
+          summand3 = 0
+      else
+          summand3 = (count_ab * Math.log(p1) +
+                      (count_a - count_ab) * Math.log(1.0 - p1))
+      end
+
+      if count_b == count_ab
+          summand4 = 0
+      else
+          summand4 = ((count_b - count_ab) * Math.log(p2) +
+                      (n - count_a - count_b + count_ab) * Math.log(1.0 - p2))
+      end
+
+      likelihood = summand1 + summand2 - summand3 - summand4
+
+      return (-2.0 * likelihood)
+    end
+    
+    def find_collocations(&block)
+      @collocation_fdist.each do |types, col_count|
+        type1, type2 = types
+        
+        next if type1.nil? || type2.nil?
+        next if @parameters.sentence_starters.include?(type2)
+        
+        type1_count = @type_fdist[type1] + @type_fdist[type1 + "."]
+        type2_count = @type_fdist[type2] + @type_fdist[type2 + "."]
+        
+        if (type1_count > 1 && type2_count > 1 &&
+            MIN_COLLOC_FREQ < col_count &&
+            col_count <= [type1_count, type2_count].min)
+          
+          ll = col_log_likelihood(type1_count, type2_count,
+                                  col_count, @type_fdist.N)
+                                  
+          if (ll >= COLLOCATION &&
+              @type_fdist.N.to_f/type1_count > type2_count.to_f/col_count)
+            yield([type1, type2], ll)
+          end
+        end
+      end
+    end
+    
   end
 end
