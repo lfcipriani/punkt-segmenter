@@ -1,12 +1,16 @@
 module Punkt
   class SentenceTokenizer < Base
-    def initialize(train_text    = nil,
+    def initialize(train_text,
                    language_vars = Punkt::LanguageVars.new, 
                    token_class   = Punkt::Token)
                    
       super(language_vars, token_class)
-            
-      train(train_text, true) if train_text
+      
+      if train_text.kind_of?(String)
+        @parameters = train(train_text)
+      elsif train_text.kind_of?(Punkt::Parameters) 
+        @parameters = train_text
+      end
     end
     
     def train(train_text)
@@ -21,8 +25,9 @@ module Punkt
     def sentences_from_text(text, realign_boundaries = false)
       result = []
       last_break = 0
-      while match = @language_vars.re_period_context.match(s, last_break)
+      while match = @language_vars.re_period_context.match(text, last_break)
         context = match[0] + match[:after_tok]
+        puts "#{context}"
         if text_contains_sentence_break?(context)
           result << text[last_break..match.end(0)]
           if match[:next_tok]
@@ -63,6 +68,8 @@ module Punkt
         next_type        = tok2.type_without_sentence_period
         token_is_initial = tok1.is_initial?
         
+        
+        puts "#{tok1} [secondpass] #{tok2}"
         if @parameters.collocations.include?([type, next_type])
           tok1.sentence_break = true
           tok1.abbr           = true

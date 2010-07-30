@@ -8,7 +8,7 @@ class PunktTrainerTest < Test::Unit::TestCase
     text = File.read(File.expand_path(File.dirname(__FILE__) + "/../../data/abbr.txt"))
     trainer = Punkt::Trainer.new()
     trainer.train(text)
-    tokenizer = Punkt::SentenceTokenizer.new(nil, trainer.get_parameters)
+    tokenizer = Punkt::SentenceTokenizer.new(trainer.get_parameters)
     puts tokenizer.tokenize(text).inspect
   end
   
