@@ -21,12 +21,18 @@ module Punkt
     def sentences_from_text(text, realign_boundaries = false)
       result = []
       last_break = 0
-      while match = l.re_period_context.match(s, last_break)
+      while match = @language_vars.re_period_context.match(s, last_break)
         context = match[0] + match[:after_tok]
         if text_contains_sentence_break?(context)
-          #TODO continuar
+          result << text[last_break..match.end(0)]
+          if match[:next_tok]
+            last_break = match.begin(:next_tok)
+          else
+            last_break = match.end(0)
+          end
         end
       end
+      result << text[last_break..(text.size-1)]
     end
     
     def text_contains_sentence_break?(text)
@@ -49,7 +55,6 @@ module Punkt
     def annotate_second_pass(tokens)
       pair_each(tokens) do |tok1, tok2|
         next unless tok2
-        
         next unless tok1.ends_with_period?
         
         token            = tok1.token
@@ -65,7 +70,30 @@ module Punkt
         
         if (tok1.abbr || tok1.ellipsis) && !token_is_initial
           is_sentence_starter = orthographic_heuristic(tok2)
-          #...
+          if is_sentence_starter == true
+            tok1.sentence_break = true
+            next
+          end
+          
+          if tok2.first_upper? && @parameters.sentence_starters.include?(next_type)
+            tok1.sentence_break = true
+            next
+          end
+        end
+        
+        if token_is_initial || type == "##number##"
+          is_sentence_starter = orthographic_heuristic(tok2)
+          if is_sentence_starter == false
+            tok1.sentence_break = false
+            tok1.abbr           = true
+            next
+          end
+          
+          if is_sentence_starter == :unknown && token_is_initial &&
+             tok2.first_upper? && !(@parameters.orthographic_context[next_type] & Punkt::ORTHO_LC)
+             tok1.sentence_break = false
+             tok1.abbr           = true
+          end
         end
         
       end
@@ -77,7 +105,6 @@ module Punkt
       orthographic_context = @parameters.orthographic_context[aug_token.type_without_sentence_period]
       
       return true if aug_token.first_upper? && (orthographic_context & Punkt::ORTHO_LC) || !(orthographic_context & Punkt::ORTHO_MID_UC)
-      
       return true if aug_token.first_lower? && (orthographic_context & Punkt::ORTHO_UC) || !(orthographic_context & Punkt::ORTHO_BEG_LC)
       
       return :unknown
