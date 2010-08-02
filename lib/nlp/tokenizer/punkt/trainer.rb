@@ -125,6 +125,7 @@ module Punkt
           @collocation_fdist << [tok1.type_without_period, tok2.type_without_sentence_period]
         end
       end
+      
     end
     
     def reclassify_abbreviation_types(types, &block)
@@ -208,7 +209,7 @@ module Punkt
 
       if @language_vars.internal_punctuation.include?(next_token.token[0])
         return true
-      elsif
+      elsif next_token.first_lower?
         type2 = next_token.type_without_sentence_period
         type2_orthographic_context = @parameters.orthographic_context[type2]
         return true if (type2_orthographic_context & Punkt::ORTHO_BEG_UC) && (type2_orthographic_context & Punkt::ORTHO_MID_UC)
