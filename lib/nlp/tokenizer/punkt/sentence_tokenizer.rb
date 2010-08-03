@@ -25,16 +25,17 @@ module Punkt
     def sentences_from_text(text, realign_boundaries = false)
       result = []
       last_break = 0
+      current_sentence_start = 0
       while match = @language_vars.re_period_context.match(text, last_break)
         context = match[0] + match[:after_tok]
-        puts "#{context}"
         if text_contains_sentence_break?(context)
-          result << text[last_break..match.end(0)]
-          if match[:next_tok]
-            last_break = match.begin(:next_tok)
-          else
-            last_break = match.end(0)
-          end
+          result << text[current_sentence_start..match.end(0)]
+          match[:next_tok] ? current_sentence_start = match.begin(:next_tok) : current_sentence_start = match.end(0)          
+        end
+        if match[:next_tok]
+          last_break = match.begin(:next_tok)
+        else
+          last_break = match.end(0)
         end
       end
       result << text[last_break..(text.size-1)]
@@ -67,14 +68,13 @@ module Punkt
         next_token       = tok2.token
         next_type        = tok2.type_without_sentence_period
         token_is_initial = tok1.is_initial?
-        
-        
-        puts "#{tok1} [secondpass] #{tok2}"
+
         if @parameters.collocations.include?([type, next_type])
-          tok1.sentence_break = true
+          tok1.sentence_break = false
           tok1.abbr           = true
+          next
         end
-        
+
         if (tok1.abbr || tok1.ellipsis) && !token_is_initial
           is_sentence_starter = orthographic_heuristic(tok2)
           if is_sentence_starter == true
@@ -97,23 +97,22 @@ module Punkt
           end
           
           if is_sentence_starter == :unknown && token_is_initial &&
-             tok2.first_upper? && !(@parameters.orthographic_context[next_type] & Punkt::ORTHO_LC)
+             tok2.first_upper? && !(@parameters.orthographic_context[next_type] & Punkt::ORTHO_LC != 0)
              tok1.sentence_break = false
              tok1.abbr           = true
           end
         end
         
       end
+      return tokens
     end
     
     def orthographic_heuristic(aug_token)
       return false if [';', ',', ':', '.', '!', '?'].include?(aug_token.token)
       
       orthographic_context = @parameters.orthographic_context[aug_token.type_without_sentence_period]
-      
-      return true if aug_token.first_upper? && (orthographic_context & Punkt::ORTHO_LC) || !(orthographic_context & Punkt::ORTHO_MID_UC)
-      return true if aug_token.first_lower? && (orthographic_context & Punkt::ORTHO_UC) || !(orthographic_context & Punkt::ORTHO_BEG_LC)
-      
+      return true if aug_token.first_upper? && (orthographic_context & Punkt::ORTHO_LC != 0) && !(orthographic_context & Punkt::ORTHO_MID_UC != 0)
+      return false if aug_token.first_lower? && (orthographic_context & Punkt::ORTHO_UC != 0) || !(orthographic_context & Punkt::ORTHO_BEG_LC != 0)
       return :unknown
     end
   

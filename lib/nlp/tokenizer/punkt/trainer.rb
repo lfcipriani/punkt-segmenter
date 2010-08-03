@@ -74,13 +74,11 @@ module Punkt
       @parameters.clear_sentence_starters 
       find_sentence_starters do |type, ll|
         @parameters.sentence_starters << type
-        puts "SENTENCE STARTERS: #{type} = #{ll}"
       end
       
       @parameters.clear_collocations
       find_collocations do |types, ll|
         @parameters.collocations << [types[0], types[1]]
-        puts "COLLOCATIONS: #{types[0]}, #{types[1]} = #{ll}"
       end
 
       @finalized = true
@@ -212,7 +210,7 @@ module Punkt
       elsif next_token.first_lower?
         type2 = next_token.type_without_sentence_period
         type2_orthographic_context = @parameters.orthographic_context[type2]
-        return true if (type2_orthographic_context & Punkt::ORTHO_BEG_UC) && (type2_orthographic_context & Punkt::ORTHO_MID_UC)
+        return true if (type2_orthographic_context & Punkt::ORTHO_BEG_UC != 0) && (type2_orthographic_context & Punkt::ORTHO_MID_UC != 0)
       end      
     end
     
