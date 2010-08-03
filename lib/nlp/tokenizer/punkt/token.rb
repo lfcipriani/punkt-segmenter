@@ -47,7 +47,7 @@ module Punkt
     end
     
     def is_ellipsis?
-      !(@token =~ /\.\.+$/).nil?
+      !(@token =~ /^\.\.+$/).nil?
     end
     
     def is_number?
@@ -55,11 +55,11 @@ module Punkt
     end
     
     def is_initial?
-      !(@token =~ /[^\W\d]\.$/).nil?
+      !(@token =~ /^[^\W\d]\.$/).nil?
     end
     
     def is_alpha?
-      !(@token =~ /[^\W\d]+$/).nil?
+      !(@token =~ /^[^\W\d]+$/).nil?
     end
     
     def is_non_punctuation?
