@@ -95,10 +95,10 @@ class PunktTokenTest < Test::Unit::TestCase
   end
 
   def test_is_initial?
-    token = Punkt::Token.new("L.F.C.")
+    token = Punkt::Token.new("C.")
     assert token.is_initial?
 
-    token = Punkt::Token.new("B.M")
+    token = Punkt::Token.new("B.M.")
     assert !token.is_initial?
   end
 
