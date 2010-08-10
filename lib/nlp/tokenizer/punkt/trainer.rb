@@ -39,8 +39,7 @@ module Punkt
     # likelihood statistics. This is useful when INCLUDE_ALL_COLLOCS is True.
     MIN_COLLOC_FREQ = 1
         
-    def initialize(train_text    = nil,
-                   language_vars = Punkt::LanguageVars.new, 
+    def initialize(language_vars = Punkt::LanguageVars.new, 
                    token_class   = Punkt::Token)
                    
       super(language_vars, token_class)
@@ -50,22 +49,19 @@ module Punkt
       @sentence_starter_fdist = FrequencyDistribution.new
       @period_tokens_count    = 0
       @sentence_break_count   = 0
-      @finalized              = false
-      
-      train(train_text, true) if train_text
+      @finalized              = false      
     end
     
-    def train(text_or_tokens, finalize=true)
+    def train(text_or_tokens)
       if text_or_tokens.kind_of?(String)
         tokens = tokenize_words(text_or_tokens) 
       elsif text_or_tokens.kind_of?(Array)
         tokens = text_or_tokens.map { |t| @token_class.new(t) }
       end
       train_tokens(tokens)
-      finalize_training if finalize
     end
     
-    def get_parameters
+    def parameters
       finalize_training unless @finalized
       return @parameters
     end
