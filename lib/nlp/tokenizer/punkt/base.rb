@@ -8,10 +8,8 @@ module Punkt
       @language_vars = language_vars
       @token_class   = token_class
     end
-  
-  private
-    
-    def tokenize_words(plain_text, &block)
+      
+    def tokenize_words(plain_text)
       result = []
       paragraph_start = false
       plain_text.split("\n").each do |line|
@@ -30,6 +28,8 @@ module Punkt
       end
       return result
     end
+  
+  private 
     
     def annotate_first_pass(tokens)
       tokens.each do |aug_token|
