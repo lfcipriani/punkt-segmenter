@@ -9,8 +9,8 @@ class PunktTest < Test::Unit::TestCase
     trainer = Punkt::Trainer.new()
     trainer.train(text)
     tokenizer = Punkt::SentenceTokenizer.new(trainer.get_parameters)
-    result = tokenizer.tokenize(text)
-        
+    result = tokenizer.tokenize(text, true)
+    
     assert_equal 45, result.size
   end
 

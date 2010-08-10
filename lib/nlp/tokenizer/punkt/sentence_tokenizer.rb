@@ -39,6 +39,8 @@ module Punkt
         end
       end
       result << text[last_break..(text.size-1)]
+      result = do_realign_boundaries(result) if realign_boundaries 
+      return result
     end
     
     def text_contains_sentence_break?(text)
@@ -48,6 +50,26 @@ module Punkt
         found = true if token.sentence_break
       end
       return false
+    end
+    
+    def do_realign_boundaries(sentences)
+      result = []
+      realign = 0
+      pair_each(sentences) do |s1, s2|
+        s1 = s1[realign..(s1.size-1)]
+        unless s2
+          result << s1 if s1
+          next
+        end
+        if match = @language_vars.re_boundary_realignment.match(s2)
+          result << s1 + match[0].strip()
+          realign = match.end(0)
+        else
+          realign = 0
+          result << s1 if s1
+        end
+      end
+      return result
     end
     
   private
