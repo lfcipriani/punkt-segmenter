@@ -13,7 +13,7 @@ module Punkt
 
       @internal_punctuation = [',', ':', ';']
 
-      @re_boundary_realignment = /["\')\]}]+?(?:\s+|(?=--)|$)/m
+      @re_boundary_realignment = /^["\')\]}]+?(?:\s+|(?=--)|$)/m
 
       @re_word_start = /[^\(\"\`{\[:;&\#\*@\)}\]\-,]/
 
