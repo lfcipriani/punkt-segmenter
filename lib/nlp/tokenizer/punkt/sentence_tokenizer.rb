@@ -29,7 +29,7 @@ module Punkt
       while match = @language_vars.re_period_context.match(text, last_break)
         context = match[0] + match[:after_tok]
         if text_contains_sentence_break?(context)
-          result << text[current_sentence_start..match.end(0)]
+          result << text[current_sentence_start..(match.end(0)-1)]
           match[:next_tok] ? current_sentence_start = match.begin(:next_tok) : current_sentence_start = match.end(0)          
         end
         if match[:next_tok]
