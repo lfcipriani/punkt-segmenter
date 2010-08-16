@@ -2,6 +2,6 @@
 # File: script/console
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
-libs = " -r #{File.dirname(__FILE__) + '/../lib/nlp.rb'}"
-puts "Loading ruby-NLP-resources env"
+libs = " -r #{File.dirname(__FILE__) + '/../lib/punkt-segmenter.rb'}"
+puts "Loading punkt-segmenter env"
 exec "#{irb} #{libs} --simple-prompt #{ARGV.join("")}"

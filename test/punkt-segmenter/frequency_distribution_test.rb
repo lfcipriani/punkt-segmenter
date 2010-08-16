@@ -1,11 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
-require "nlp/probability/frequency_distribution"
 
-class FrequencyDistributionTest < Test::Unit::TestCase
+class Probability::FrequencyDistributionTest < Test::Unit::TestCase
 
   def setup
     @words = %w(two one three one one three two one two)
-    @freq_dist = FrequencyDistribution.new
+    @freq_dist = Probability::FrequencyDistribution.new
   end
 
   def test_increment_count_on_given_sample

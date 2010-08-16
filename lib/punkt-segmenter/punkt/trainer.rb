@@ -1,4 +1,4 @@
-require "nlp/probability/frequency_distribution"
+require "punkt-segmenter/frequency_distribution"
 
 module Punkt
   class Trainer < Base
@@ -44,9 +44,9 @@ module Punkt
                    
       super(language_vars, token_class)
       
-      @type_fdist             = FrequencyDistribution.new
-      @collocation_fdist      = FrequencyDistribution.new
-      @sentence_starter_fdist = FrequencyDistribution.new
+      @type_fdist             = Probability::FrequencyDistribution.new
+      @collocation_fdist      = Probability::FrequencyDistribution.new
+      @sentence_starter_fdist = Probability::FrequencyDistribution.new
       @period_tokens_count    = 0
       @sentence_break_count   = 0
       @finalized              = false      

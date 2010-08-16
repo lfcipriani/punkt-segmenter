@@ -43,10 +43,9 @@ module Punkt
   
 end
 
-require "set"
-require "nlp/tokenizer/punkt/language_vars"
-require "nlp/tokenizer/punkt/parameters"
-require "nlp/tokenizer/punkt/token"
-require "nlp/tokenizer/punkt/base"
-require "nlp/tokenizer/punkt/trainer"
-require "nlp/tokenizer/punkt/sentence_tokenizer"
+require "punkt-segmenter/punkt/language_vars"
+require "punkt-segmenter/punkt/parameters"
+require "punkt-segmenter/punkt/token"
+require "punkt-segmenter/punkt/base"
+require "punkt-segmenter/punkt/trainer"
+require "punkt-segmenter/punkt/sentence_tokenizer"

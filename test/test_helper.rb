@@ -1,6 +1,5 @@
 require 'test/unit'
-require 'lib/nlp'
+require 'punkt-segmenter'
 
 require 'rubygems'
 require 'ruby-debug'
-
