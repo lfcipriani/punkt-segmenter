@@ -1,6 +1,6 @@
 ## Punkt sentence tokenizer
 
-This code is a ruby port of the Punkt sentence tokenizer algorithm implemented by the NLTK Project ([http://www.nltk.org/]).
+This code is a ruby port of the Punkt sentence tokenizer algorithm implemented by the NLTK Project ([http://www.nltk.org/]). Punkt is a language-independent, unsupervised approach to sentence boundary detection. It is based on the assumption that a large number of ambiguities in the determination of sentence boundaries can be eliminated once abbreviations have been identiﬁed.
 
 The description of the algorithm is presented in the following academic paper:
 
