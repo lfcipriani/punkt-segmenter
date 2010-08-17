@@ -9,7 +9,7 @@ end
 
 desc "Run test coverage (need cover_me gem)"
 task :coverage do
-  ENV[:coverage] = "true"
+  ENV["coverage"] = "true"
   Rake::Task["test"].invoke
 end
 

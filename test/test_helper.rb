@@ -1,4 +1,4 @@
-if ENV[:coverage]
+if ENV["coverage"]
   require 'cover_me'
   CoverMe.config do |c|
       # where is your project's root:
@@ -13,4 +13,4 @@ require 'test/unit'
 require 'rubygems'
 require 'ruby-debug'
 
-require 'lib/punkt-segmenter'
+require 'punkt-segmenter'
