@@ -7,5 +7,10 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-task :default => :test
+desc "Run test coverage (need cover_me gem)"
+task :coverage do
+  ENV[:coverage] = "true"
+  Rake::Task["test"].invoke
+end
 
+task :default => :test
