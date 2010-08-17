@@ -146,7 +146,7 @@ module Punkt
       
       orthographic_context = @parameters.orthographic_context[aug_token.type_without_sentence_period]
       return true if aug_token.first_upper? && (orthographic_context & Punkt::ORTHO_LC != 0) && !(orthographic_context & Punkt::ORTHO_MID_UC != 0)
-      return false if aug_token.first_lower? && (orthographic_context & Punkt::ORTHO_UC != 0) || !(orthographic_context & Punkt::ORTHO_BEG_LC != 0)
+      return false if aug_token.first_lower? && ((orthographic_context & Punkt::ORTHO_UC != 0) || !(orthographic_context & Punkt::ORTHO_BEG_LC != 0))
       return :unknown
     end
   
