@@ -50,8 +50,8 @@ The algorithm uses the text passed as parameter to train and tokenize in sentenc
 
     trainer = Punkt::Trainer.new()
     trainer.train(trainning_text)
-
-		tokenizer = Punkt::SentenceTokenizer.new(**trainer.parameters**)
+    
+    tokenizer = Punkt::SentenceTokenizer.new(trainer.parameters)
     result    = tokenizer.sentences_from_text(text, :output => :sentences_text)
 
 In this case, instead of passing the text to SentenceTokenizer, you pass the trainer parameters.
@@ -60,10 +60,10 @@ A recommended use case for the trainning object is to train a big corpus in a sp
 
 The available options for *sentences_from_text* method are:
 
-	- array of sentences indexes (default)
-	- array of sentences string  (:output => :sentences_text)
-	- array of sentences tokens  (:output => :tokenized_sentences)	
-	- realigned boundaries (:realign_boundaries => true): do this if you want to realign sentences that end with, for example, parenthesis, quotes, brackets, etc
+- array of sentences indexes (default)
+- array of sentences string  (**:output => :sentences_text**)
+- array of sentences tokens  (**:output => :tokenized_sentences**)	
+- realigned boundaries (**:realign_boundaries => true**): do this if you want to realign sentences that end with, for example, parenthesis, quotes, brackets, etc
 	
 If you have a list of tokens, you can use the *sentences_from_tokens* method, which takes only the list of tokens as parameter.
 
