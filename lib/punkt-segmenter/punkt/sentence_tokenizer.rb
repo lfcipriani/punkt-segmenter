@@ -74,7 +74,7 @@ module Punkt
           last_break = match.end(0)
         end
       end
-      result << [last_break, (text.size-1)]
+      result << [current_sentence_start, (text.size-1)]
     end
     
     def text_contains_sentence_break?(text)
