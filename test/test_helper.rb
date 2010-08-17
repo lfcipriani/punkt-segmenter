@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'punkt-segmenter'
+require 'lib/punkt-segmenter'
 
 require 'rubygems'
 require 'ruby-debug'
