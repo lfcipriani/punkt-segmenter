@@ -6,6 +6,8 @@ module Punkt
                    
       super(language_vars, token_class)
       
+      @trainer = nil
+      
       if train_text_or_parameters.kind_of?(String)
         @parameters = train(train_text_or_parameters)
       elsif train_text_or_parameters.kind_of?(Punkt::Parameters) 
@@ -15,7 +17,7 @@ module Punkt
       end
     end
     
-    def sentences_from_text(text, options)
+    def sentences_from_text(text, options = {})
       sentences = split_in_sentences(text)
       sentences = realign_boundaries(text, sentences) if options[:realign_boundaries]
       sentences = self.class.send(options[:output], text, sentences) if options[:output]
@@ -24,8 +26,8 @@ module Punkt
     end
     alias_method :tokenize, :sentences_from_text
     
-    def sentences_from_tokens(tokens, options)
-      tokens = annotate_tokens(tokens.map { |t| token_class.new(t) })
+    def sentences_from_tokens(tokens)
+      tokens = annotate_tokens(tokens.map { |t| @token_class.new(t) })
       
       sentences = []
       sentence = []
@@ -48,14 +50,16 @@ module Punkt
       
       def tokenized_sentences(text, sentences_indexes)
         tokenizer = Punkt::Base.new()
-        self.sentences_text(text, sentences_indexes).map { |text| tokenizer.tokenize_words(text) }
+        self.sentences_text(text, sentences_indexes).map { |text| tokenizer.tokenize_words(text, :output => :string) }
       end
     end
     
   private
   
     def train(train_text)
-      @parameters = Punkt::Trainer(train_text, @language_vars, @token_class).parameters
+      @trainer = Punkt::Trainer.new(@language_vars, @token_class) unless @trainer
+      @trainer.train(train_text)
+      @parameters = @trainer.parameters
     end
   
     def split_in_sentences(text)
