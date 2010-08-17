@@ -36,7 +36,7 @@ module Punkt
           sentence = [] 
         end
       end
-      sentences << sentence unless sentences.empty?
+      sentences << sentence unless sentence.empty?
       
       return sentences
     end
