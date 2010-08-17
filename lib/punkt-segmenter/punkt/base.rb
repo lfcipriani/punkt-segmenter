@@ -9,7 +9,8 @@ module Punkt
       @token_class   = token_class
     end
       
-    def tokenize_words(plain_text)
+    def tokenize_words(plain_text, options = {})
+      return @language_vars.word_tokenize(plain_text) if options[:output] == :string
       result = []
       paragraph_start = false
       plain_text.split("\n").each do |line|
@@ -28,7 +29,7 @@ module Punkt
       end
       return result
     end
-  
+      
   private 
     
     def annotate_first_pass(tokens)
