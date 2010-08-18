@@ -117,5 +117,11 @@ class PunktTokenTest < Test::Unit::TestCase
     assert !token.is_non_punctuation?
   end
   
+  def test_to_s_and_inspect
+    token = Punkt::Token.new("foo", :abbr => true, :sentence_break => true, :ellipsis => true)
+    
+    assert_equal "<foo<A><E><S>>", token.inspect
+  end
+  
 end
 
