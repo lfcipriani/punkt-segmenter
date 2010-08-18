@@ -13,4 +13,4 @@ require 'test/unit'
 require 'rubygems'
 require 'ruby-debug'
 
-require 'punkt-segmenter'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/punkt-segmenter')
