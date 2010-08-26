@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = "punkt-segmenter"
-  s.version       = "0.9.0"
+  s.version       = "0.9.1"
   s.platform      = Gem::Platform::RUBY
   s.summary       = "Ruby port of the NLTK Punkt sentence segmentation algorithm"
   s.require_paths = ['lib']
