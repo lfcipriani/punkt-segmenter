@@ -28,21 +28,18 @@ module Probability
     end
 
     def keys
-      result = @cache[:ordered_by_frequency_desc] || order_by_frequency_desc
-      result.map { |item| item[0] }
+      items.map { |item| item[0] }
     end
 
     def values
-      result = @cache[:ordered_by_frequency_desc] || order_by_frequency_desc
-      result.map { |item| item[1] }
+      items.map { |item| item[1] }
     end
 
     def items
-      @cache[:ordered_by_frequency_desc] || order_by_frequency_desc
+      @cache[:ordered_by_frequency_desc] ||= self.to_a.sort {|x,y| y[1] <=> x[1] }
     end
 
     def each(&block)
-      items = @cache[:ordered_by_frequency_desc] || order_by_frequency_desc
       items.each { |item| yield(item[0], item[1]) }
     end
 
@@ -109,12 +106,6 @@ module Probability
         self.inc(sample, value)
       end
       self
-    end
-
-  private
-  
-    def order_by_frequency_desc
-      @cache[:ordered_by_frequency_desc] = self.to_a.sort {|x,y| y[1] <=> x[1] }
     end
 
   end
