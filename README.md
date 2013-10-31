@@ -77,3 +77,7 @@ Check the unit tests for more detailed examples in English and Portuguese.
   [http://www.nltk.org/]: http://www.nltk.org/
   [Download paper]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.85.5017&rep=rep1&type=pdf
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lfcipriani/punkt-segmenter/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
