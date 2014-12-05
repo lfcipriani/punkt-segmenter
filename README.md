@@ -31,10 +31,10 @@ Let's suppose we have the following text:
 
 You can separate in sentences using the Punkt::SentenceTokenizer object:
 
-    tokenizer = Punkt::SentenceTokenizer.new(text)
+    tokenizer = Punkt::SentenceTokenizer.new(:english)
     result    = tokenizer.sentences_from_text(text, :output => :sentences_text)
 
-The result will be:
+This loads in some settings derived from training the Tokenizer against the WSJ English corpus. Other languages are supported (look at the data/ directory for a list). The result will be:
 
     result    = [
         [0] "A minute is a unit of measurement of time or of angle.",
@@ -43,10 +43,16 @@ The result will be:
         [3] "The minute is not an SI unit; however, it is accepted for use with SI units.",
         [4] "The symbol for minute or minutes is min.",
         [5] "The fact that an hour contains 60 minutes is probably due to influences from the Babylonians, who used a base-60 or sexagesimal counting system.",
-        [6] "Colloquially, a min. may also refer to an indefinite amount of time substantially longer than the standardized length."
+        [6] "Colloquially, a min.""
+        [7] "may also refer to an indefinite amount of time substantially longer than the standardized length."
     ]
 
-The algorithm uses the text passed as parameter to train and tokenize in sentences. Sometimes the size of the input text is not enough to have a well trained set, which may cause some mistakes on the sentences splitting. For these cases you can train the Punkt segmenter:
+Notice that "min." was interpreted as a sentence break. This isn't an abbreviation seen in the WSJ corpus, so it is considered the end of a sentence. If you have a large enough text to analyze, you can pass it into the constructor to train it instead.
+
+    tokenizer = Punkt::SentenceTokenizer.new(text)
+    result    = tokenizer.sentences_from_text(text, :output => :sentences_text)
+
+Note, that sometimes the size of the input text is not enough to have a well trained set, which may cause some mistakes on the sentences splitting. You can also explicitly train the tokenizer with one text and analyze another.
 
     trainer = Punkt::Trainer.new()
     trainer.train(trainning_text)

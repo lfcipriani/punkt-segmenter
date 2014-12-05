@@ -8,7 +8,9 @@ module Punkt
       
       @trainer = nil
       
-      if train_text_or_parameters.kind_of?(String)
+      if train_text_or_parameters.kind_of?(Symbol)
+        @parameters = Parameters.load_language(train_text_or_parameters)
+      elsif train_text_or_parameters.kind_of?(String)
         @parameters = train(train_text_or_parameters)
       elsif train_text_or_parameters.kind_of?(Punkt::Parameters) 
         @parameters = train_text_or_parameters
