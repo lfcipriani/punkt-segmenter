@@ -1,6 +1,6 @@
 # Punkt sentence tokenizer
 
-This code is a ruby 1.9.x port of the Punkt sentence tokenizer algorithm implemented by the NLTK Project ([http://www.nltk.org/]). Punkt is a **language-independent**, unsupervised approach to **sentence boundary detection**. It is based on the assumption that a large number of ambiguities in the determination of sentence boundaries can be eliminated once abbreviations have been identiﬁed.
+This code is a Ruby port of the Punkt sentence tokenizer algorithm implemented by the NLTK Project ([http://www.nltk.org/]). Punkt is a **language-independent**, unsupervised approach to **sentence boundary detection**. It is based on the assumption that a large number of ambiguities in the determination of sentence boundaries can be eliminated once abbreviations have been identiﬁed.
 
 The full description of the algorithm is presented in the following academic paper:
 
@@ -59,7 +59,6 @@ Note, that sometimes the size of the input text is not enough to have a well tra
 
     trainer = Punkt::Trainer.new()
     trainer.train(trainning_text)
-    
     tokenizer = Punkt::SentenceTokenizer.new(trainer.parameters)
     result    = tokenizer.sentences_from_text(text, :output => :sentences_text)
 
@@ -71,9 +70,9 @@ The available options for *sentences_from_text* method are:
 
 - array of sentences indexes (default)
 - array of sentences string  (**:output => :sentences_text**)
-- array of sentences tokens  (**:output => :tokenized_sentences**)	
+- array of sentences tokens  (**:output => :tokenized_sentences**)
 - realigned boundaries (**:realign_boundaries => true**): do this if you want to realign sentences that end with, for example, parenthesis, quotes, brackets, etc
-	
+
 If you have a list of tokens, you can use the *sentences_from_tokens* method, which takes only the list of tokens as parameter.
 
 Check the unit tests for more detailed examples in English and Portuguese.
@@ -82,11 +81,8 @@ Check the unit tests for more detailed examples in English and Portuguese.
 *This code follows the terms and conditions of Apache License v2 (http://www.apache.org/licenses/LICENSE-2.0)*
 
 *Copyright (C) Luis Cipriani*
-  
+
   [http://www.nltk.org/]: http://www.nltk.org/
   [Download paper]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.85.5017&rep=rep1&type=pdf
 
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lfcipriani/punkt-segmenter/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
