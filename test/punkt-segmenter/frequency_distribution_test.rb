@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 
-class Probability::FrequencyDistributionTest < Test::Unit::TestCase
-
+class Probability::FrequencyDistributionTest < Minitest::Test
   def setup
     @words = %w(two one three one one three two one two)
     @freq_dist = Probability::FrequencyDistribution.new
@@ -39,14 +38,14 @@ class Probability::FrequencyDistributionTest < Test::Unit::TestCase
   def test_get_sample_frequencies
     @words.each { |word| @freq_dist << word }
 
-    assert_equal((@freq_dist.frequency_of("one") + 
-                 @freq_dist.frequency_of("two") + 
+    assert_equal((@freq_dist.frequency_of("one") +
+                 @freq_dist.frequency_of("two") +
                  @freq_dist.frequency_of("three")).round, 1)
   end
 
   def test_get_sample_with_maximum_ocurrences
     @words.each { |word| @freq_dist << word }
-    
+
     assert_equal(@freq_dist.max, "one")
   end
 
@@ -64,15 +63,15 @@ class Probability::FrequencyDistributionTest < Test::Unit::TestCase
 
   def test_get_keys_ordered_by_frequency_desc
     @words.each { |word| @freq_dist << word }
-    
+
     assert_equal @freq_dist.keys.first, "one"
     assert_equal @freq_dist.keys[1]   , "two"
     assert_equal @freq_dist.keys.last , "three"
- end
+  end
 
   def test_get_values_ordered_by_frequency_desc
     @words.each { |word| @freq_dist << word }
-    
+
     assert_equal @freq_dist.values.first, 4
     assert_equal @freq_dist.values[1]   , 3
     assert_equal @freq_dist.values.last , 2
@@ -81,19 +80,19 @@ class Probability::FrequencyDistributionTest < Test::Unit::TestCase
   def test_iterators_must_order_by_frequency_desc
     @words.each { |word| @freq_dist << word }
     ordered = []
-    @freq_dist.each do |sample, value| 
+    @freq_dist.each do |sample, value|
       ordered << [sample, value]
     end
     assert_equal ordered, @freq_dist.items
 
     ordered = []
-    @freq_dist.each_key do |keys| 
+    @freq_dist.each_key do |keys|
       ordered << keys
     end
     assert_equal ordered, @freq_dist.keys
 
     ordered = []
-    @freq_dist.each_value do |value| 
+    @freq_dist.each_value do |value|
       ordered << value
     end
     assert_equal ordered, @freq_dist.values
@@ -101,18 +100,17 @@ class Probability::FrequencyDistributionTest < Test::Unit::TestCase
 
   def test_removing_samples
     @words.each { |word| @freq_dist << word }
-    
     assert_equal @freq_dist.delete("one"), 4
     assert_equal @freq_dist.N            , 5
 
-    assert_raise(RuntimeError) { @freq_dist.delete_if { |sample, value| value == 2 } }
+    assert_raises(RuntimeError) { @freq_dist.delete_if { |sample, value| value == 2 } }
   end
 
   def test_features_with_empty_distribution
     assert_equal @freq_dist["a sample"]             , 0
     assert_equal @freq_dist.N                       , 0
     assert_equal @freq_dist.frequency_of("a sample"), 0
-    assert_equal @freq_dist.max                     , nil
+    assert_nil   @freq_dist.max
   end
 end
 

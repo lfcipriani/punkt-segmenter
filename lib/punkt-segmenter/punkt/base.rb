@@ -1,14 +1,14 @@
 module Punkt
   class Base
-    def initialize(language_vars = Punkt::LanguageVars.new, 
+    def initialize(language_vars = Punkt::LanguageVars.new,
                    token_class   = Punkt::Token,
                    parameters    = Punkt::Parameters.new)
-                   
+
       @parameters    = parameters
       @language_vars = language_vars
       @token_class   = token_class
     end
-      
+
     def tokenize_words(plain_text, options = {})
       return @language_vars.word_tokenize(plain_text) if options[:output] == :string
       result = []
@@ -21,7 +21,7 @@ module Punkt
                            :line_start      => true)
           paragraph_start = false
           line_tokens.map! { |token| @token_class.new(token) }.unshift(first_token)
-          
+
           result += line_tokens
         else
           paragraph_start = true
@@ -29,9 +29,8 @@ module Punkt
       end
       return result
     end
-      
-  private 
-    
+
+  private
     def annotate_first_pass(tokens)
       tokens.each do |aug_token|
         tok = aug_token.token
@@ -41,17 +40,16 @@ module Punkt
         elsif aug_token.is_ellipsis?
           aug_token.ellipsis = true
         elsif aug_token.ends_with_period? && !tok.end_with?("..")
-          tok_low = UnicodeUtils.downcase(tok.chop)
+          tok_low = tok.chop.downcase
           if @parameters.abbreviation_types.include?(tok_low) || @parameters.abbreviation_types.include?(tok_low.split("-")[-1])
             aug_token.abbr = true
           else
             aug_token.sentence_break = true
           end
         end
-
       end
     end
-    
+
     def pair_each(list, &block)
       previous = list[0]
       list[1..list.size-1].each do |item|
@@ -60,6 +58,5 @@ module Punkt
       end
       yield(previous, nil)
     end
-        
   end
 end

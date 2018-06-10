@@ -1,69 +1,69 @@
 module Punkt
   class SentenceTokenizer < Base
     def initialize(train_text_or_parameters,
-                   language_vars = Punkt::LanguageVars.new, 
+                   language_vars = Punkt::LanguageVars.new,
                    token_class   = Punkt::Token)
-                   
+
       super(language_vars, token_class)
-      
+
       @trainer = nil
-      
+
       if train_text_or_parameters.kind_of?(Symbol)
         @parameters = Parameters.load_language(train_text_or_parameters)
       elsif train_text_or_parameters.kind_of?(String)
         @parameters = train(train_text_or_parameters)
-      elsif train_text_or_parameters.kind_of?(Punkt::Parameters) 
+      elsif train_text_or_parameters.kind_of?(Punkt::Parameters)
         @parameters = train_text_or_parameters
       else
         raise "You need to pass trainer parameters or a text to train."
       end
     end
-    
+
     def sentences_from_text(text, options = {})
       sentences = split_in_sentences(text)
       sentences = realign_boundaries(text, sentences) if options[:realign_boundaries]
       sentences = self.class.send(options[:output], text, sentences) if options[:output]
-      
+
       return sentences
     end
     alias_method :tokenize, :sentences_from_text
-    
+
     def sentences_from_tokens(tokens)
       tokens = annotate_tokens(tokens.map { |t| @token_class.new(t) })
-      
+
       sentences = []
       sentence = []
       tokens.each do |t|
         sentence << t.token
         if t.sentence_break
           sentences << sentence
-          sentence = [] 
+          sentence = []
         end
       end
       sentences << sentence unless sentence.empty?
-      
+
       return sentences
     end
-    
+
     class << self
       def sentences_text(text, sentences_indexes)
         sentences_indexes.map { |index| text[index[0]..index[1]] }
       end
-      
+
       def tokenized_sentences(text, sentences_indexes)
         tokenizer = Punkt::Base.new()
-        self.sentences_text(text, sentences_indexes).map { |text| tokenizer.tokenize_words(text, :output => :string) }
+        self.sentences_text(text, sentences_indexes).map { |sentence| tokenizer.tokenize_words(sentence, :output => :string) }
       end
     end
-    
+
   private
-  
+
     def train(train_text)
       @trainer = Punkt::Trainer.new(@language_vars, @token_class) unless @trainer
       @trainer.train(train_text)
       @parameters = @trainer.parameters
     end
-  
+
     def split_in_sentences(text)
       result = []
       last_break = 0
@@ -72,7 +72,7 @@ module Punkt
         context = match[0] + match[:after_tok]
         if text_contains_sentence_break?(context)
           result << [current_sentence_start, (match.end(0)-1)]
-          match[:next_tok] ? current_sentence_start = match.begin(:next_tok) : current_sentence_start = match.end(0)          
+          match[:next_tok] ? current_sentence_start = match.begin(:next_tok) : current_sentence_start = match.end(0)
         end
         if match[:next_tok]
           last_break = match.begin(:next_tok)
@@ -82,7 +82,7 @@ module Punkt
       end
       result << [current_sentence_start, (text.size-1)]
     end
-    
+
     def text_contains_sentence_break?(text)
       found = false
       annotate_tokens(tokenize_words(text)).each do |token|
@@ -91,18 +91,18 @@ module Punkt
       end
       return false
     end
-    
+
     def annotate_tokens(tokens)
       tokens = annotate_first_pass(tokens)
       tokens = annotate_second_pass(tokens)
       return tokens
     end
-    
+
     def annotate_second_pass(tokens)
       pair_each(tokens) do |tok1, tok2|
         next unless tok2
         next unless tok1.ends_with_period?
-        
+
         token            = tok1.token
         type             = tok1.type_without_period
         next_token       = tok2.token
@@ -121,13 +121,13 @@ module Punkt
             tok1.sentence_break = true
             next
           end
-          
+
           if tok2.first_upper? && @parameters.sentence_starters.include?(next_type)
             tok1.sentence_break = true
             next
           end
         end
-        
+
         if token_is_initial || type == "##number##"
           is_sentence_starter = orthographic_heuristic(tok2)
           if is_sentence_starter == false
@@ -135,27 +135,26 @@ module Punkt
             tok1.abbr           = true
             next
           end
-          
+
           if is_sentence_starter == :unknown && token_is_initial &&
              tok2.first_upper? && !(@parameters.orthographic_context[next_type] & Punkt::ORTHO_LC != 0)
              tok1.sentence_break = false
              tok1.abbr           = true
           end
         end
-        
       end
       return tokens
     end
-    
+
     def orthographic_heuristic(aug_token)
       return false if [';', ',', ':', '.', '!', '?'].include?(aug_token.token)
-      
+
       orthographic_context = @parameters.orthographic_context[aug_token.type_without_sentence_period]
       return true if aug_token.first_upper? && (orthographic_context & Punkt::ORTHO_LC != 0) && !(orthographic_context & Punkt::ORTHO_MID_UC != 0)
       return false if aug_token.first_lower? && ((orthographic_context & Punkt::ORTHO_UC != 0) || !(orthographic_context & Punkt::ORTHO_BEG_LC != 0))
       return :unknown
     end
-  
+
     def realign_boundaries(text, sentences)
       result = []
       realign = 0
@@ -177,6 +176,5 @@ module Punkt
       end
       return result
     end
-    
   end
 end
