@@ -4,8 +4,8 @@ This code is a ruby 1.9.x port of the Punkt sentence tokenizer algorithm impleme
 
 The full description of the algorithm is presented in the following academic paper:
 
-> Kiss, Tibor and Strunk, Jan (2006): Unsupervised Multilingual Sentence Boundary Detection.  
-> Computational Linguistics 32: 485-525.  
+> Kiss, Tibor and Strunk, Jan (2006): Unsupervised Multilingual Sentence Boundary Detection.
+> Computational Linguistics 32: 485-525.
 > [Download paper]
 
 Here are the credits for the original implementation:
@@ -21,7 +21,10 @@ I simply did the ruby port and some API changes.
 
     gem install punkt-segmenter
 
-Currently, this gem only runs on ruby 1.9.x (because of unicode_utils dependency)
+Currently, this gem only runs on ruby 2.3 or above because it uses
+Unicode string internals. Note that you really should use Ruby 2.4 or
+above if you are using it for non-English languages, since Unicode
+downcase might not be as reliable.
 
 ## How to use
 
