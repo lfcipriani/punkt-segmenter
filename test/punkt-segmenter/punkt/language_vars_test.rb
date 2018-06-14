@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../test_helper')
 
-class PunktLanguageVarsTest < Test::Unit::TestCase
+class PunktLanguageVarsTest < Minitest::Test
 
   def setup
     @lang_var = Punkt::LanguageVars.new

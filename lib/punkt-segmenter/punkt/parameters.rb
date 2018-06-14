@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'json'
+
 module Punkt
   class Parameters
     
@@ -32,6 +35,24 @@ module Punkt
     def add_orthographic_context(type, flag)
       @orthographic_context[type] |= flag
     end
-    
+
+    def self.load_language(language)
+      data_path = File.join(File.dirname(__FILE__), "..", "..", "..", "data", "#{language}.json")
+
+      json_body = ""
+      open(data_path) {|file| json_body = file.read }
+      json = JSON.parse(json_body)
+
+      # let's load
+      p = new
+
+      json["sentence_starters"].each {|s| p.sentence_starters << s}
+      json["abbrev_types"].each {|a| p.abbreviation_types << a}
+      json["collocations"].each {|a| p.collocations << a}
+
+      json["ortho_context"].each {|k,v| p.orthographic_context[k] = v }
+
+      p
+    end
   end
 end
